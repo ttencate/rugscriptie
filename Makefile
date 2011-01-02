@@ -2,10 +2,10 @@
 all: rugscriptie.zip rugscriptie-example.pdf
 
 clean:
-	rm -f georgia.*pk georgia.afm georgia.tfm ttfonts.map rugscriptie-manual.aux rugscriptie-manual.dvi rugscriptie-manual.log rugscriptie-manual.pdf rugscriptie-manual.toc rugscriptie.zip
+	rm -f georgia.*pk georgia.afm georgia.tfm ttfonts.map *.aux *.log *.toc rugscriptie-manual.pdf rugscriptie-example.pdf rugscriptie.zip
 	rm -f *~ *.backup
 
-rugscriptie.zip: georgia.ttf georgia.afm georgia.tfm t1georgia.fd rugscriptie-manual.tex rugscriptie-manual.pdf rugscriptie.sty ttfonts.map logos
+rugscriptie.zip: georgia.ttf georgia.afm georgia.tfm t1georgia.fd rugscriptie-manual.tex rugscriptie-manual.pdf rugscriptie.sty ttfonts.map ruglogos
 	zip -r rugscriptie.zip $^
 
 rugscriptie-manual.pdf: rugscriptie-manual.tex rugscriptie.sty

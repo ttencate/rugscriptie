@@ -1,17 +1,15 @@
 \documentclass[a4paper]{article}
 
-\usepackage[british]{babel}
+\usepackage[dutch,british]{babel}
 \usepackage[noredef]{rugscriptie}
 
 \title{The \texttt{rugscriptie} package for \LaTeX}
-\author{Thomas ten Cate}
-\date{January 1, 2011}
+\author{Thomas ten Cate\thanks{\texttt{ttencate@gmail.com}}}
+\date{January 2, 2011}
 
 \begin{document}
 
 \maketitle
-
-\tableofcontents
 
 \section{Introduction}
 
@@ -19,38 +17,53 @@ This \LaTeX{} package, \texttt{rugscriptie}, can be used to format the title pag
 
 This documentation, as well as the package source and commands, are completely in English to accommodate international students. However, the produced title page can optionally be shown in Dutch instead.
 
-\section{Requirements}
+\section{Quick start}
 
-This package requires the use \texttt{pdflatex}, and will \emph{not} work with normal \texttt{latex}.
+In its simplest form, simply extract the package \texttt{rugscriptie.zip} into the same directory as your main thesis \texttt{.tex} file.
 
-Furthermore, \texttt{rugscriptie} depends on the packages \texttt{babel}, \texttt{graphicx} and \texttt{fontenc}, which are probably already installed.
-
-\section{Usage}
-
-In its simplest form, simply extract the package \texttt{rugscriptie.zip} into the same directory as your main thesis \texttt{.tex} file. Then include the package in your document preamble:
+Then, the following example should get you started:
 
 \begin{quote}
 \begin{verbatim}
+	\documentclass[a4paper]{report} % a4paper option recommended
+	
+	\usepackage[dutch]{babel} % Use dutch, british or english
 	\usepackage{rugscriptie}
+
+	\faculty{fwn} % Or feb, fgg, fgmw, fl, frg, frw, fw, umcg
+	\thesistype{Master's thesis} % Will be printed unmodified
+	\title{My wonderful thesis}
+	\author{Y.O.U.R.~Name}
+	\supervisor{Prof.~S.~Upervisor}
+	\supervisor{Dr.~S.~Econdary-Supervisor}
+	\date{January 1970}
+
+	\begin{document}
+	\maketitle
+	...
+	\end{document}
 \end{verbatim}
 \end{quote}
 
-In addition to the commands \verb|\title| and \verb|\author|, this package adds the \emph{required} command \verb|\thesistype|, which will be typeset on the title page. Example usage:
+Run this through \texttt{pdflatex}, and it should give you a PDF file with a properly formatted title page, in Dutch, with the logo of the FWN faculty.
+
+\section{Requirements}
+
+The \texttt{rugscriptie} package depends on the packages \texttt{babel}, \texttt{ifthen}, \texttt{graphicx} and \texttt{fontenc}, which are probably already installed.
+
+The package works out of the box if you use \texttt{pdflatex}, but requires some work if you want to use it with \texttt{latex} and \texttt{dvips}. See Section \ref{sec:dvips} for details.
+
+\section{Reference}
+
+The main functionality of the package is to override the standard \verb|\maketitle| command. This typesets a title page in the RUG style. This section describes the available options to tweak the contents of that title page.
+
+\subsection{Thesis type}
+
+In addition to the commands \verb|\title| and \verb|\author|, this package adds the command \verb|\thesistype|, which will be typeset on the title page. Example usage:
 
 \begin{quote}
 \begin{verbatim}
 	\thesistype{Master's Thesis Mathematics}
-\end{verbatim}
-\end{quote}
-
-To typeset the title page, use the \verb|\maketitle| command right at the start of your document, as usual:
-
-\begin{quote}
-\begin{verbatim}
-	\begin{document}
-		\maketitle
-		...
-	\end{document}
 \end{verbatim}
 \end{quote}
 
@@ -123,7 +136,7 @@ If additional people were involved in the project, the command \verb|\person| sh
 \subsection{Language}
 \label{sec:language}
 
-The text and logo on the title page can be in English or in Dutch. Which language is used depends on the setting of the \texttt{babel} package. The default is English; for a thesis in Dutch, set this up \emph{before} including the \texttt{rugscriptie} package:
+The text and logo on the title page can be in English or in Dutch. Which language is used depends on the setting of the \texttt{babel} package. The default language depends on the system that your document is compiled on, so it's best to set this up explicitly. For a thesis in Dutch:
 
 \begin{quote}
 \begin{verbatim}
@@ -136,15 +149,56 @@ Using \texttt{dutch} results in a Dutch title page; all other language options w
 
 \medskip
 
-If you're unhappy about the labels ``Student'', ``Primary supervisor'' and ``Secondary supervisor'', you can redefine them. For example, if you don't want to be labelled at all, and prefer the word ``advisor'' instead:
+The package uses the language in effect at the time of \verb|\maketitle|; therefore, to get a thesis in Dutch, but with an English title page, you could do this:
 
 \begin{quote}
 \begin{verbatim}
-	\renewcommand\studentname{}
-	\renewcommand\primarysupervisorname{Primary advisor}
-	\renewcommand\secondarysupervisorname{Secondary advisor}
+	\usepackage{rugscriptie}
+	\usepackage[british,dutch]{babel}
+	...
+	\begin{document}
+	\maketitle
+	\selectlanguage{british}
+	...
+	\end{document}
 \end{verbatim}
 \end{quote}
+
+\noindent (The \emph{last} language in the option list to \texttt{babel} will take effect.)
+
+\medskip
+
+If you're unhappy about the labels ``Student'', ``Primary supervisor'' and ``Secondary supervisor'', you can redefine them. For example, if you don't want your own name to be labelled at all, and prefer the word ``advisor'' instead:
+
+\begin{quote}
+\begin{verbatim}
+	\newcommand\studentname{}
+	\newcommand\primarysupervisorname{Primary advisor}
+	\newcommand\secondarysupervisorname{Secondary advisor}
+\end{verbatim}
+\end{quote}
+
+The package defines these commands at the time of the \verb|\maketitle|, but only if they are not yet defined; therefore, place these anywhere before that point.
+
+\subsection{If you're not using \texttt{pdflatex}}
+\label{sec:dvips}
+
+The recommended way to use this package is with \texttt{pdflatex}.
+
+\medskip
+
+If you can't or won't use \texttt{pdflatex}, but want to go through plain \texttt{latex}, \texttt{dvips}, and possibly \texttt{pstopdf}, you will have to convert the logo file to EPS format. (EPS versions are not included because of their file size.) To do so:
+
+\begin{enumerate}
+	\item
+		Run your manuscript through \texttt{latex}, and take note of the file that it cannot find, for example: \\
+		\verb|! LaTeX Error: File `ruglogos/RUGR_FWN_logoNL_zwart' not found.|
+	\item
+		Navigate to the \texttt{ruglogos} directory and convert that file to EPS using commands like the following: \\
+		\verb|pdf2ps RUGR_FWN_logoNL_zwart.pdf| \\
+		\verb|ps2eps RUGR_FWN_logoNL_zwart.eps| \\
+		You can remove the intermediate \verb|.ps| file, if you like.
+\end{enumerate}
 
 \section{Limitations}
 
@@ -153,7 +207,7 @@ Nothing is perfect.
 \begin{itemize}
 	\item The \verb|\thanks| command is not supported.
 	\item The \verb|[titlepage]| option to the document class is ignored. We always produce the title on a separate page.
-	\item Because of the font encoding used for Georgia, and the PDF format of the logos, you \emph{must} use \texttt{pdflatex}. The old-fashioned \texttt{dvi}~$\rightarrow$~\texttt{ps}~$\rightarrow$~\texttt{pdf} route is not supported.
+	\item The UMCG logo could look better. It is currently set somewhat smaller than the others. If you need this logo, drop the author of this package an e-mail.
 \end{itemize}
 
 \section{Implementation notes}
@@ -179,9 +233,9 @@ Also thanks to Damir Rakityansky for the more in-depth description at \\
 \section{Version history}
 
 \begin{description}
-	\item[v1.0.2] Consistently uses the word ``supervisor'' instead of ``advisor''.
-	\item[v1.0.1] Fixes a critical bug introduced by working on the package at 2 AM.
-	\item[v1.0] The first version.
+	\item[v1.0.2 (January 2, 2011)] Consistently uses the word ``supervisor'' instead of ``advisor''. No longer requires \texttt{babel} to be included first. Or at all (defaulting to English without it). Now with limited DVI/PS support (does not include EPS logos). Renames \texttt{logos} to \texttt{ruglogos} to reduce the possibility of a name clash. Improves the manual, providing a ``Quick start'' section at the beginning.
+	\item[v1.0.1 (January 2, 2011)] Fixes a critical bug introduced by working on the package at 2 AM.
+	\item[v1.0 (January 1, 2011)] The first version.
 \end{description}
 
 \section{Legal}
@@ -196,8 +250,6 @@ Microsoft once distributed the Georgia typeface as a part of the gratis (but not
 
 The following page shows an example of the package output, mimicking the Word template.
 
-%\selectlanguage{dutch}
-
 \makeatletter
 \faculty{fwn}
 \def\@title{Hier staat een titel die over meerdere regels kan lopen.}
@@ -208,9 +260,9 @@ The following page shows an example of the package output, mimicking the Word te
 \def\@date{Maart 2008}
 \makeatother
 
+\selectlanguage{dutch}
 \rugmaketitle
-
-%\selectlanguage{british}
+\selectlanguage{british}
 
 \end{document}
 

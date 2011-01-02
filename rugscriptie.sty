@@ -2,21 +2,15 @@
 
 \ProvidesPackage{rugscriptie}[2010/01/02 v1.0.2 Package for title pages in the style of the University of Groningen]
 
+% For string comparisons.
+\RequirePackage{ifthen}
+
 % Set up fonts.
 \RequirePackage[T1]{fontenc}
 \font\georgia georgia
 
 % We need this for the logo.
 \RequirePackage{graphicx}
-
-% Babel is required to check the language.
-% XXX This could be made optional through a [nobabel] package option,
-% or by explicitly setting the language through [dutch] or [english].
-\@ifundefined{bbl@main@language}
-	{\PackageError{rugscriptie}{Include the `babel' package first,\MessageBreak specifying a language option}{You need to include the `babel' package (with a language option) before including the `rugscriptie' package}
-		\endinput}
-	{}
-\RequirePackage{babel}
 
 % Package option to not override \maketitle.
 \DeclareOption{noredef}{\gdef\ifredef{\iffalse}}
@@ -26,21 +20,20 @@
 \ProcessOptions
 
 % Set up our language.
-\newcommand\ruglanguageen{
+% `default' is used if no matching command for the current \languagename exists,
+% and should be English (like the rest of LaTeX).
+\newcommand\ruglanguage@default{
 	\gdef\@logolang{EN}
-	\gdef\studentname{Student}
-	\gdef\primarysupervisorname{Primary supervisor}
-	\gdef\secondarysupervisorname{Secondary supervisor}
+	\providecommand\studentname{Student}
+	\providecommand\primarysupervisorname{Primary supervisor}
+	\providecommand\secondarysupervisorname{Secondary supervisor}
 	}
-\newcommand\ruglanguagenl{
+\newcommand\ruglanguage@dutch{
 	\gdef\@logolang{NL}
-	\gdef\studentname{Student}
-	\gdef\primarysupervisorname{Eerste begeleider}
-	\gdef\secondarysupervisorname{Tweede begeleider}
+	\providecommand\studentname{Student}
+	\providecommand\primarysupervisorname{Eerste begeleider}
+	\providecommand\secondarysupervisorname{Tweede begeleider}
 	}
-\iflanguage{dutch}
-	{\ruglanguagenl}
-	{\ruglanguageen}
 
 % Command that sets the faculty, used for the logo.
 % XXX Support creation of custom logos, built from the main RUG logo
@@ -88,7 +81,7 @@
 \fi
 
 % Typesets a logo.
-\newcommand\@makelogo[1]{\includegraphics[height=50pt]{logos/RUGR_#1_logo\@logolang_zwart}}
+\newcommand\@makelogo[1]{\includegraphics[height=50pt]{ruglogos/RUGR_#1_logo\@logolang_zwart}}
 
 % An minipage-like environment that, when opened at the top of a page, spans the entire page, without margins.
 \newenvironment{paperpage}{%
@@ -123,6 +116,15 @@
 % Definition of the format of the main title page.
 \newcommand\rugmaketitle{
 	{
+		\@ifundefined{languagename}{
+			\def\rug@setlang{\ruglanguage@default}
+		}{
+			\def\rug@setlang{\csname ruglanguage@\languagename\endcsname}
+		}
+		\if\rug@setlang\relax
+			\def\rug@setlang{\ruglanguage@default}
+		\fi
+		\rug@setlang
 		\begin{titlepage}
 			\begin{paperpage}
 				\newskip\leftmargin \leftmargin 112pt
