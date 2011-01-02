@@ -3,7 +3,11 @@ The `rugscriptie` package for LaTeX
 
 `rugscriptie` is a LaTeX package to format the title of a thesis in the style of the University of Groningen, Netherlands.
 
-If you just want to use the package, it's easiest to download the provided ZIP file and extract it to the directory containing your thesis. Then refer to the extracted file `rugscriptie-manual.pdf` for more information.
+If you just want to use the package:
 
-To build the package from source, clone the Git repository, navigate to its directory, and type `make`.
+* Download the package [`rugscriptie.zip`](https://github.com/downloads/ttencate/rugscriptie/rugscriptie.zip). This link should always point to the latest version.
+* Extract this ZIP file to the directory containing your thesis.
+* Refer to the extracted file `rugscriptie-manual.pdf` for more information, including a quick-start guide.
+
+The Git repository lives [on GitHub](https://github.com/ttencate/rugscriptie). To build the package from source, clone the Git repository, navigate to its directory, and type `make`.
 
