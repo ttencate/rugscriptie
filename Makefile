@@ -1,5 +1,5 @@
 .PHONY: all clean
-all: rugscriptie.zip
+all: rugscriptie.zip rugscriptie-example.pdf
 
 clean:
 	rm -f georgia.*pk georgia.afm georgia.tfm ttfonts.map rugscriptie-manual.aux rugscriptie-manual.dvi rugscriptie-manual.log rugscriptie-manual.pdf rugscriptie-manual.toc rugscriptie.zip
@@ -10,6 +10,9 @@ rugscriptie.zip: georgia.ttf georgia.afm georgia.tfm t1georgia.fd rugscriptie-ma
 
 rugscriptie-manual.pdf: rugscriptie-manual.tex rugscriptie.sty
 	pdflatex $<
+	pdflatex $<
+
+rugscriptie-example.pdf: rugscriptie-example.tex rugscriptie.sty
 	pdflatex $<
 
 rugscriptie.sty: georgia.ttf georgia.afm georgia.tfm ttfonts.map t1georgia.fd
