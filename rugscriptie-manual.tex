@@ -1,0 +1,210 @@
+\documentclass[a4paper]{article}
+
+\usepackage[british]{babel}
+\usepackage[noredef]{rugscriptie}
+
+\title{The \texttt{rugscriptie} package for \LaTeX}
+\author{Thomas ten Cate}
+\date{January 1, 2011}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+
+This \LaTeX{} package, \texttt{rugscriptie}, can be used to format the title page of your thesis (`scriptie') in the official style of the University of Groningen, Netherlands (Rijksuniversiteit Groningen, RUG). It was born out of annoyance with the RUG only providing a template in Word format.
+
+This documentation, as well as the package source and commands, are completely in English to accommodate international students. However, the produced title page can optionally be shown in Dutch instead.
+
+\section{Requirements}
+
+This package requires the use \texttt{pdflatex}, and will \emph{not} work with normal \texttt{latex}.
+
+Furthermore, \texttt{rugscriptie} depends on the packages \texttt{babel}, \texttt{graphicx} and \texttt{fontenc}, which are probably already installed.
+
+\section{Usage}
+
+In its simplest form, simply extract the package \texttt{rugscriptie.zip} into the same directory as your main thesis \texttt{.tex} file. Then include the package in your document preamble:
+
+\begin{quote}
+\begin{verbatim}
+	\usepackage{rugscriptie}
+\end{verbatim}
+\end{quote}
+
+In addition to the commands \verb|\title| and \verb|\author|, this package adds the \emph{required} command \verb|\thesistype|, which will be typeset on the title page. Example usage:
+
+\begin{quote}
+\begin{verbatim}
+	\thesistype{Master's Thesis Mathematics}
+\end{verbatim}
+\end{quote}
+
+To typeset the title page, use the \verb|\maketitle| command right at the start of your document, as usual:
+
+\begin{quote}
+\begin{verbatim}
+	\begin{document}
+		\maketitle
+		...
+	\end{document}
+\end{verbatim}
+\end{quote}
+
+\subsection{Faculty logo}
+
+By default, the logo of the Faculty of Mathematics and Natural Sciences (FWN) is shown at the top of the page. However, to promote the use of \LaTeX{} in other disciplines, this package can show logos of other faculties as well, using the \verb|\faculty| command:
+
+\begin{quote}
+\begin{verbatim}
+	\faculty{fw}
+\end{verbatim}
+\end{quote}
+
+Supported faculty names are \texttt{feb}, \texttt{fgg}, \texttt{fgmw}, \texttt{fl}, \texttt{frg}, \texttt{frw}, \texttt{fw}, \texttt{fwn}, and \texttt{umcg} (which will display the UMGC logo next to the RUG logo).
+
+The faculty logo is shown in Dutch or in English, depending on the language setting; see Section \ref{sec:language}.
+
+\subsection{People}
+
+To show the names of your thesis supervisors, use the \verb|\supervisor| command, possibly multiple times:
+
+\begin{quote}
+\begin{verbatim}
+	\supervisor{L.~Euler}
+	\supervisor{I.~Newton}
+\end{verbatim}
+\end{quote}
+
+\noindent The first will be labeled as ``primary'', all others as ``secondary'':
+
+\begin{quote}
+	Primary supervisor: L.~Euler\par
+	Secondary supervisor: I.~Newton\par
+\end{quote}
+
+\medskip
+
+It is possible to add more than one person to a line, using the standard \verb|\and| command:
+
+\begin{quote}
+\begin{verbatim}
+	\supervisor{I.~Newton \and G.~Leibniz}
+\end{verbatim}
+\end{quote}
+
+\noindent In the current implementation, this simply produces a comma:
+
+\begin{quote}
+	Secondary supervisor: I.~Newton, G.~Leibniz\par
+\end{quote}
+
+\medskip
+
+If additional people were involved in the project, the command \verb|\person| should come in handy. It takes two arguments: the role that the person played, and the name of the person(s). For example,
+
+\begin{quote}
+\begin{verbatim}
+	\person{Organ donations}{J.S.~Bach}
+\end{verbatim}
+\end{quote}
+
+\noindent produces:
+
+\begin{quote}
+	Organ donations: J.S.~Bach
+\end{quote}
+
+\noindent In fact, \verb|\supervisor| is a special case of this command.
+
+\subsection{Language}
+\label{sec:language}
+
+The text and logo on the title page can be in English or in Dutch. Which language is used depends on the setting of the \texttt{babel} package. The default is English; for a thesis in Dutch, set this up \emph{before} including the \texttt{rugscriptie} package:
+
+\begin{quote}
+\begin{verbatim}
+	\usepackage[dutch]{babel}
+	\usepackage{rugscriptie}
+\end{verbatim}
+\end{quote}
+
+Using \texttt{dutch} results in a Dutch title page; all other language options will result in English.
+
+\medskip
+
+If you're unhappy about the labels ``Student'', ``Primary supervisor'' and ``Secondary supervisor'', you can redefine them. For example, if you don't want to be labelled at all, and prefer the word ``advisor'' instead:
+
+\begin{quote}
+\begin{verbatim}
+	\renewcommand\studentname{}
+	\renewcommand\primarysupervisorname{Primary advisor}
+	\renewcommand\secondarysupervisorname{Secondary advisor}
+\end{verbatim}
+\end{quote}
+
+\section{Limitations}
+
+Nothing is perfect.
+
+\begin{itemize}
+	\item The \verb|\thanks| command is not supported.
+	\item The \verb|[titlepage]| option to the document class is ignored. We always produce the title on a separate page.
+	\item Because of the font encoding used for Georgia, and the PDF format of the logos, you \emph{must} use \texttt{pdflatex}. The old-fashioned \texttt{dvi}~$\rightarrow$~\texttt{ps}~$\rightarrow$~\texttt{pdf} route is not supported.
+\end{itemize}
+
+\section{Implementation notes}
+
+The Word template includes a JPEG version of the RUG logo. Although high-quality and high-resolution, this package provides PDF files instead. The logos were taken from the RUG logo database at \\
+\verb|http://www.rug.nl/huisstijl/logobank/index| \\
+and converted from EPS to PDF format using the \texttt{epstopdf} program. As a bonus, the typefaces used in the logo are no longer a mixture of Egyptienne F and Georgia, but are all Egyptienne F as intended by the designer.
+
+At the time of writing, the Faculty of Economics and Business (FEB) logo was only available in JPEG format. This version has therefore been included in the package instead of a vector PDF version.
+
+\section{Thanks}
+
+Thanks to Gordon Grubert for his brief but to-the-point explanation of how to get TrueType fonts into \LaTeX: \\
+\verb|http://fachschaft.physik.uni-greifswald.de/~stitch/ttf.html|.
+
+Also thanks to Damir Rakityansky for the more in-depth description at \\
+\verb|http://www.radamir.com/tex/ttf-tex.htm|.
+
+\section{Version history}
+
+\begin{description}
+	\item[v1.0] The first version.
+\end{description}
+
+\section{Legal}
+
+This package is in the public domain. Do with it as you please.
+
+Microsoft once distributed the Georgia typeface as a part of the gratis (but not free) Microsoft `Core Fonts for the Web' pack. The EULA allows for distribution of the complete pack in unmodified form; however, this is an \texttt{.exe} file that would be of little use to \LaTeX{} users. I therefore took the liberty to extract the \texttt{Georgia.ttf} file and include it -- unmodified -- in this package.
+
+\appendix
+
+\section{Example}
+
+The following page shows an example of the package output, mimicking the Word template.
+
+%\selectlanguage{dutch}
+
+\makeatletter
+\faculty{fwn}
+\def\@title{Hier staat een titel die over meerdere regels kan lopen.}
+\thesistype{Masteronderzoek Wiskunde}
+\def\@author{V.N.~Achternaam}
+\supervisor{P.R.O.F.~Achternaam}
+\supervisor{D.R.~Achternaam}
+\def\@date{Maart 2008}
+\makeatother
+
+\rugmaketitle
+
+%\selectlanguage{british}
+
+\end{document}
+

@@ -1,0 +1,171 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{rugscriptie}[2010/12/31 v1.0 Package for title pages in the style of the University of Groningen]
+
+% Set up fonts.
+\RequirePackage[T1]{fontenc}
+\font\georgia georgia
+
+% We need this for the logo.
+\RequirePackage{graphicx}
+
+% Babel is required to check the language.
+% XXX This could be made optional through a [nobabel] package option,
+% or by explicitly setting the language through [dutch] or [english].
+\@ifundefined{bbl@main@language}
+	{\PackageError{rugscriptie}{Include the `babel' package first,\MessageBreak specifying a language option}{You need to include the `babel' package (with a language option) before including the `rugscriptie' package}
+		\endinput}
+	{}
+\RequirePackage{babel}
+
+% Package option to not override \maketitle.
+\DeclareOption{noredef}{\gdef\ifredef{\iffalse}}
+\def\ifredef{\iftrue}
+
+% End of options list.
+\ProcessOptions
+
+% Set up our language.
+\newcommand\ruglanguageen{
+	\gdef\@logolang{EN}
+	\gdef\studentname{Student}
+	\gdef\primarysupervisorname{Primary advisor}
+	\gdef\secondarysupervisorname{Secondary advisor}
+	}
+\newcommand\ruglanguagenl{
+	\gdef\@logolang{NL}
+	\gdef\studentname{Student}
+	\gdef\primarysupervisorname{Eerste begeleider}
+	\gdef\secondarysupervisorname{Tweede begeleider}
+	}
+\iflanguage{dutch}
+	{\ruglanguagenl}
+	{\ruglanguageen}
+
+% Command that sets the faculty, used for the logo.
+% XXX Support creation of custom logos, built from the main RUG logo
+% and boxes with Georgia text, separated by the RUG slash.
+\newcommand\faculty[1]{
+	\@ifundefined{faculty#1}
+		{\PackageWarning{rugscriptie}{Undefined faculty #1; use for example \noexpand\faculty{fwn}}}
+		{\csname faculty#1\endcsname}}
+
+% List of people involved. By default, only the author, who is the student who wrote the thesis.
+\newcommand\personsep{: }
+\newcommand\@person[2]{\if#1\@empty\else#1\personsep\fi#2\par}
+\def\@people{
+	\def\and{\unskip, }
+	\@person{\studentname}{\@author}\par}
+\newcommand\person[2]{
+	\g@addto@macro\@people{\@person{#1}{#2}}}
+
+% Commands for extra metadata.
+\newcommand\@thesistype{\PackageWarning{rugscriptie}{No \noexpand\thesistype given}}
+\newcommand\thesistype[1]{\renewcommand\@thesistype{#1}}
+\newcommand\supervisor[1]{
+	\person\primarysupervisorname{#1}
+	\renewcommand\supervisor{\secondarysupervisor}}
+\newcommand\secondarysupervisor[1]{\person\secondarysupervisorname{#1}}
+\newcommand\advisor{\supervisor}
+\newcommand\secondaryadvisor{\secondaryadvisor}
+
+% Faculty logos.
+\newcommand\facultyfeb{\renewcommand\@logo{\@makelogo{FEB}}}
+\newcommand\facultyfgg{\renewcommand\@logo{\@makelogo{FGG}}}
+\newcommand\facultyfgmw{\renewcommand\@logo{\@makelogo{FGMW}}}
+\newcommand\facultyfl{\renewcommand\@logo{\@makelogo{FL}}}
+\newcommand\facultyfrg{\renewcommand\@logo{\@makelogo{FRG}}}
+\newcommand\facultyfrw{\renewcommand\@logo{\@makelogo{FRW}}}
+\newcommand\facultyfw{\renewcommand\@logo{\@makelogo{FW}}}
+\newcommand\facultyfwn{\renewcommand\@logo{\@makelogo{FWN}}}
+\newcommand\facultyumcg{\renewcommand\@logo{\@makelogo{UMCG}}}
+\newcommand\@logo{}
+\faculty{fwn}
+
+% Ignore \thanks.
+\ifredef
+	\renewcommand\thanks[1]{\PackageWarning{rugscriptie}{The \noexpand\thanks command is not supported; ignored}}
+\fi
+
+% Typesets a logo.
+\newcommand\@makelogo[1]{\includegraphics[height=50pt]{logos/RUGR_#1_logo\@logolang_zwart}}
+
+% An minipage-like environment that, when opened at the top of a page, spans the entire page, without margins.
+\newenvironment{paperpage}{%
+	\hsize\paperwidth
+	\textwidth\hsize
+	\columnwidth\hsize
+	\setbox\@tempboxa
+		\hbox to 0pt\bgroup
+			\vbox to 0pt\bgroup
+				\vbox to \paperheight\bgroup
+}{%
+					\par\vfil
+				\egroup
+				\vss
+			\egroup
+			\hss
+		\egroup
+		\vfil
+	\vspace*{-1in}
+	\vspace*{-\voffset}
+	\vspace*{-\topmargin}
+	\vspace*{-\headheight}
+	\vspace*{-\headsep}
+	\vspace*{-\topskip}
+	\noindent
+	\hspace*{-1in}%
+	\hspace*{-\hoffset}%
+	\hspace*{-\oddsidemargin}%
+	\raise\topskip\box\@tempboxa
+}
+
+% Definition of the format of the main title page.
+\newcommand\rugmaketitle{
+	{
+		\begin{titlepage}
+			\begin{paperpage}
+				\newskip\leftmargin \leftmargin 112pt
+				\newskip\rightmargin \rightmargin 61pt
+				\def\inner{
+					\advance\hsize -\leftmargin
+					\advance\hsize -\rightmargin
+					\raggedright}
+ 				\parindent=0pt
+				\fontfamily{georgia}\selectfont
+				\vskip 27pt
+				\vbox to 50pt{\hskip 40pt \@logo\par \vfil}
+				\vskip 90pt
+				\hskip \leftmargin \vbox{\fontsize{36pt}{48pt}\selectfont \inner \@title\par}
+				\vfill
+				\hskip \leftmargin \vbox{
+						\inner
+						{\fontsize{14pt}{24pt}\selectfont \@thesistype\par}
+						{\fontsize{12pt}{24pt}\selectfont
+							\@date\par
+							\@people}}
+				\vskip 99pt
+			\end{paperpage}
+		\end{titlepage}%
+	}
+	\setcounter{footnote}{0}%
+	\global\let\@title\@empty
+	\global\let\@thesistype\@empty
+	\global\let\@author\@empty
+	\global\let\@supervisor\@empty
+	\global\let\@date\@empty
+	\global\let\title\relax
+	\global\let\thesistype\relax
+	\global\let\author\relax
+	\global\let\supervisor\relax
+	\global\let\date\relax
+	\global\let\and\relax
+	\ifredef
+		\global\let\maketitle\relax
+	\fi
+}
+\ifredef
+	\def\maketitle\rugmaketitle
+	\let\rugmaketitle\relax
+\fi
+
