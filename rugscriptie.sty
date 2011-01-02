@@ -1,6 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 
-\ProvidesPackage{rugscriptie}[2010/01/02 v1.0.1 Package for title pages in the style of the University of Groningen]
+\ProvidesPackage{rugscriptie}[2010/01/02 v1.0.2 Package for title pages in the style of the University of Groningen]
 
 % Set up fonts.
 \RequirePackage[T1]{fontenc}
@@ -29,8 +29,8 @@
 \newcommand\ruglanguageen{
 	\gdef\@logolang{EN}
 	\gdef\studentname{Student}
-	\gdef\primarysupervisorname{Primary advisor}
-	\gdef\secondarysupervisorname{Secondary advisor}
+	\gdef\primarysupervisorname{Primary supervisor}
+	\gdef\secondarysupervisorname{Secondary supervisor}
 	}
 \newcommand\ruglanguagenl{
 	\gdef\@logolang{NL}
@@ -67,7 +67,7 @@
 	\renewcommand\supervisor{\secondarysupervisor}}
 \newcommand\secondarysupervisor[1]{\person\secondarysupervisorname{#1}}
 \newcommand\advisor{\supervisor}
-\newcommand\secondaryadvisor{\secondaryadvisor}
+\newcommand\secondaryadvisor{\secondarysupervisor}
 
 % Faculty logos.
 \newcommand\facultyfeb{\renewcommand\@logo{\@makelogo{FEB}}}
