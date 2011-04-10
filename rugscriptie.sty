@@ -113,6 +113,14 @@
 	\raise\topskip\box\@tempboxa
 }
 
+% titlepage-like environment that works both with standard LaTeX classes
+% and the memoir class.
+\@ifundefined{titlingpage}{
+	\newenvironment{@rugtitlepage}{\begin{titlepage}}{\end{titlepage}}
+}{
+	\newenvironment{@rugtitlepage}{\begin{titlingpage}}{\end{titlingpage}}
+}
+
 % Definition of the format of the main title page.
 \newcommand\rugmaketitle{
 	{
@@ -125,7 +133,7 @@
 			\def\rug@setlang{\ruglanguage@default}
 		\fi
 		\rug@setlang
-		\begin{titlepage}
+		\begin{@rugtitlepage}
 			\begin{paperpage}
 				\newskip\leftmargin \leftmargin 112pt
 				\newskip\rightmargin \rightmargin 61pt
@@ -148,7 +156,7 @@
 							\@people}}
 				\vskip 99pt
 			\end{paperpage}
-		\end{titlepage}%
+		\end{@rugtitlepage}%
 	}
 	\setcounter{footnote}{0}%
 	\global\let\@title\@empty
